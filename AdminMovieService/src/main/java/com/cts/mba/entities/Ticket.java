@@ -21,9 +21,11 @@ public class Ticket {
 	private int totalSeats;
 	private int availableSeats;
 	private int bookedSeats;
+	private String bookingDate;
 	private String movieName;
 	private String theatreName;
 	private String seatNumber;
+	private Double price;
 	
 	@ManyToOne(fetch = FetchType.EAGER  , cascade = CascadeType.ALL)
 	@JoinColumn(name = "movie_id")
@@ -120,6 +122,22 @@ public class Ticket {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public String getBookingDate() {
+		return bookingDate;
+	}
+
+	public void setBookingDate(String bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 	
 	

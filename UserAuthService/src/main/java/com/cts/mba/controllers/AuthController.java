@@ -89,14 +89,23 @@ public class AuthController {
 		
 		
 		
-		@GetMapping("/user/{email}")
-		public ResponseEntity<?> getUserFromUsername(@PathVariable("email") String email){
+		@GetMapping("/userById/{id}")
+		public ResponseEntity<?> getUserFromId(@RequestHeader(name = "Authorization", required = false) String header , @PathVariable("id") int id){
 			      
+			if (header == null) {
+
+				error.setError(Constants.UNAUTHORIZED);
+				return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+			}
+
+			JwtExpired valid = this.service.tokenExpired(header);
+			if (valid.isExpired() == true) {
+				return new ResponseEntity<>(valid, HttpStatus.UNAUTHORIZED);
+			}
 			
-			
-			  User user = this.service.findUserByEmail(email);
+			  User user = this.service.findUserById(id);
 			  if(user == null) {
-				  error.setError(Constants.USER_NOT_REGISTERED);
+				  error.setError(Constants.USER_NOT_FOUND);
 				  return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 			  }
 			     UserDAO dao  = new UserDAO(user.getFirstName() , user.getLastName() , user.getContact() , user.getEmail());

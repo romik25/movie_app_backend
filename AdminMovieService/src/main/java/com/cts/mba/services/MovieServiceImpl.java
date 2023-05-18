@@ -49,6 +49,8 @@ public class MovieServiceImpl implements MovieService {
 			movie2.setSeatsAvailable(movie.getSeatsAvailable());
 			movie2.setDescription(movie.getDescription());
 			movie2.setGenre(movie.getGenre());
+			movie2.setStatus(movie.getStatus());
+			movie2.setTicketPrice(movie.getTicketPrice());
 			Movie saved = this.repo.saveAndFlush(movie2);
 			return saved;
 		} else {

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.cts.mba.feignClient.FeignUtil;
 import com.cts.mba.services.MovieBookingService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/s3/booking")
 public class MovieController {
 
@@ -84,6 +86,27 @@ public class MovieController {
 		List<Ticket> collected = ticketsOfMovie.stream().map(ticket -> ticket).collect(Collectors.toList());
 
 		return new ResponseEntity<List<Ticket>>(collected, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/movie/tickets/user/{id}")
+	public ResponseEntity<?> getTicketsOfAMovieByUser(@RequestHeader(name = "Authorization", required = false) String header,
+			@PathVariable("id") int id) {
+
+		if (header == null) {
+
+			error.setError(Constants.UNAUTHORIZED);
+			return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+		}
+
+		JwtExpired valid = this.util.validToken(header);
+		if (valid.isExpired() == true) {
+			return new ResponseEntity<>(valid, HttpStatus.UNAUTHORIZED);
+		}
+
+		  List<Ticket> ticketsBookedByParticularUser = this.service.getTicketsForUser(id);
+
+		return new ResponseEntity<List<Ticket>>(ticketsBookedByParticularUser, HttpStatus.OK);
 	}
 
 }

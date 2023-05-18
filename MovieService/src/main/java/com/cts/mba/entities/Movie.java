@@ -28,6 +28,7 @@ public class Movie {
 	private String description;
 	private String genre;
 	private String status;
+	private double ticketPrice;
 	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "theatre_id", referencedColumnName = "id")
@@ -35,7 +36,7 @@ public class Movie {
 	
 	
 	
-	  @OneToMany(mappedBy="movie"  , cascade = CascadeType.ALL)
+	  @OneToMany(mappedBy="movie"  , cascade = CascadeType.ALL , orphanRemoval = true)
 	  @JsonIgnore
 	  private Set<Ticket> tickets;
 	
@@ -154,6 +155,20 @@ public class Movie {
 
 	public void setGenre(String genre) {
 		this.genre = genre;
+	}
+
+
+
+
+	public double getTicketPrice() {
+		return ticketPrice;
+	}
+
+
+
+
+	public void setTicketPrice(double ticketPrice) {
+		this.ticketPrice = ticketPrice;
 	}
 	
 	

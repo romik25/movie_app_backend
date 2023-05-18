@@ -1,6 +1,7 @@
 package com.cts.mba.services;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,8 @@ public class AuthServiceImpl implements AuthService {
 		String tokenString = this.jwtutil.generateToken(user);
 
 		JwtTokenDAO tkn = new JwtTokenDAO(tokenString);
+		  
+		tkn.setId(this.findUserByEmail(user.getUsername()).getId());
 
 		for (GrantedAuthority auth : authorities) {
 
@@ -167,6 +170,16 @@ public class AuthServiceImpl implements AuthService {
 			roleRepo.save(role);
 		}
 
+	}
+
+	@Override
+	public User findUserById(int id) {
+		  Optional<User> userFound = this.repo.findById(id);
+		  if(userFound.isEmpty()) {
+			  return null;
+		  }
+		  
+		return userFound.get();
 	}
 
 }

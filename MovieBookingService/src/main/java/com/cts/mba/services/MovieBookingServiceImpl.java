@@ -1,5 +1,6 @@
 package com.cts.mba.services;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,7 +43,7 @@ public class MovieBookingServiceImpl implements MovieBookingService {
 			movie.setStatus("Unavailable");
 		}
 
-		int percentage = (availableSeats / movie.getTheatre().getTotalSeats()) * 100;
+		int percentage = (availableSeats * 100)/movie.getTheatre().getTotalSeats() ;
 		if (percentage <= 20) {
 			movie.setStatus("Filling");
 		}
@@ -52,6 +53,8 @@ public class MovieBookingServiceImpl implements MovieBookingService {
 				ticketdto.getSeatNumber(), movie, movie.getMovieName(), movie.getTheatreName(), ticketdto.getUserId());
 
 		ticket.setTotalSeats(movie.getTheatre().getTotalSeats());
+		ticket.setBookingDate(ticketdto.getBookingDate());
+		ticket.setPrice(ticketdto.getPrice());
 
 		repo2.save(movie);
 
@@ -71,6 +74,15 @@ public class MovieBookingServiceImpl implements MovieBookingService {
 
 		Set<Ticket> tickets = found.get().getTickets();
 		return tickets;
+	}
+	
+	
+
+	@Override
+	public List<Ticket> getTicketsForUser(int id) {
+		// TODO Auto-generated method stub
+		  List<Ticket> ticketsByUser = this.repo.findByUserId(id);
+		return ticketsByUser;
 	}
 
 }
