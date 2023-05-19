@@ -16,6 +16,8 @@ public interface AuthService {
 	   
 	   public User findUserById(int id);
 	   
+	   public User changePassword(String newPassword , String email);
+	   
 	   public JwtExpired tokenExpired(String header);
 	   
 	   public Boolean  passwordMatches(User user , LoginDAO login);

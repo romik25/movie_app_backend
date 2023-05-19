@@ -182,4 +182,18 @@ public class AuthServiceImpl implements AuthService {
 		return userFound.get();
 	}
 
+	@Override
+	public User changePassword(String newPassword, String email) {
+		// TODO Auto-generated method stub
+		 
+		 User user = this.repo.findByEmail(email);
+		 if(user == null)
+			  return null;
+		 
+		 user.setPassword(passwordEncoder.encode(newPassword));
+		 
+		return this.repo.save(user);
+		 
+	}
+
 }

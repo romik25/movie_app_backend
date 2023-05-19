@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.mba.constants.Constants;
+import com.cts.mba.dao.ChangePasswordDTO;
 import com.cts.mba.dao.ErrorDAO;
 import com.cts.mba.dao.JwtExpired;
 import com.cts.mba.dao.JwtTokenDAO;
 import com.cts.mba.dao.LoginDAO;
 import com.cts.mba.dao.MessageDAO;
 import com.cts.mba.dao.UserDAO;
+import com.cts.mba.dao.UserDAO2;
 import com.cts.mba.entities.Role;
 import com.cts.mba.entities.User;
 import com.cts.mba.services.AuthService;
@@ -88,6 +90,22 @@ public class AuthController {
 		
 		
 		
+		@GetMapping("/user/{email}")
+		public ResponseEntity<?> getUserFromEmail(@PathVariable("email") String email){
+			      
+		
+			
+			  User user = this.service.findUserByEmail(email);
+			  if(user == null) {
+				  error.setError(Constants.USER_NOT_FOUND);
+				  return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+			  }
+			     UserDAO2 dao  = new UserDAO2(user.getFirstName() , user.getLastName() , user.getContact() , user.getEmail() , user.getSecurityAnswer());
+			   return ResponseEntity.ok(dao);
+		}
+		
+		
+		
 		
 		@GetMapping("/userById/{id}")
 		public ResponseEntity<?> getUserFromId(@RequestHeader(name = "Authorization", required = false) String header , @PathVariable("id") int id){
@@ -110,6 +128,21 @@ public class AuthController {
 			  }
 			     UserDAO dao  = new UserDAO(user.getFirstName() , user.getLastName() , user.getContact() , user.getEmail());
 			   return ResponseEntity.ok(dao);
+		}
+		
+		
+		@PostMapping("/changePassword")
+		public ResponseEntity<?> changePassword(@RequestBody() ChangePasswordDTO changePassword){
+			  
+			   User user = this.service.changePassword(changePassword.getPassword() , changePassword.getEmail());
+			   if(user == null) {
+				   error.setError(Constants.USER_NOT_FOUND);
+					  return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+			   }
+			  
+			   message.setMessage(Constants.PASSWORD_CHANGED_SUCCESSFULLY);
+			   
+			   return new ResponseEntity<>(message, HttpStatus.OK);
 		}
 		
 		
