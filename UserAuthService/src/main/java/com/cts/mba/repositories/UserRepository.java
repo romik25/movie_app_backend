@@ -9,7 +9,7 @@ import com.cts.mba.entities.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	
 	
-	   @Query(value="Select * from user where email =:email" , nativeQuery = true)
+	   @Query(value="Select * from users where email =:email" , nativeQuery = true)
 	   User findByEmail(@Param("email") String email);
 
 }

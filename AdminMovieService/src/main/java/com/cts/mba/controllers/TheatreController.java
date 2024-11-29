@@ -21,7 +21,6 @@ import com.cts.mba.dto.Message;
 import com.cts.mba.entities.Theatre;
 import com.cts.mba.exceptions.TheatreNotFoundException;
 import com.cts.mba.feignClient.FeignUtil;
-import com.cts.mba.kafka.NotificationProducer;
 import com.cts.mba.services.TheatreService;
 
 @RestController
@@ -39,8 +38,6 @@ public class TheatreController {
 	private FeignUtil util;
 	
 	
-	@Autowired
-	private NotificationProducer producer;
 	
 	@PostMapping("/addTheatre")
 	public  ResponseEntity<?> addTheatre(@RequestBody Theatre theatre , @RequestHeader(name = "Authorization", required = false) String header){
@@ -56,7 +53,6 @@ public class TheatreController {
 		}
 		     
 		Theatre theatre1 = this.service.addTheatre(theatre);
-		  producer.sendNotificationTheatre(theatre1);
 		return new ResponseEntity<Theatre>(theatre1 , HttpStatus.OK);
 	}
 	
@@ -75,7 +71,6 @@ public class TheatreController {
 		}
 		     
 		  Theatre updateTheatre = this.service.updateTheatre(theatre);
-		  producer.sendNotificationTheatre(updateTheatre);
 		  return new ResponseEntity<Theatre>(updateTheatre , HttpStatus.OK);
 	}
 	

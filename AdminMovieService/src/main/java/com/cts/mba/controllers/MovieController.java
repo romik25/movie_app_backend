@@ -33,7 +33,6 @@ import com.cts.mba.entities.Movie;
 
 import com.cts.mba.exceptions.MovieNotFoundException;
 import com.cts.mba.feignClient.FeignUtil;
-import com.cts.mba.kafka.NotificationProducer;
 import com.cts.mba.services.MovieService;
 import com.google.gson.Gson;
 
@@ -59,9 +58,6 @@ public class MovieController {
 	@Autowired
 	private FeignUtil util;
 
-	// Kafka Producer
-	@Autowired
-	private NotificationProducer producer;
 
 	@PostMapping("/{roleId}/register")
 	public ResponseEntity<?> register(@RequestBody UserDTO user, @PathVariable("roleId") int roleId) {
@@ -150,7 +146,6 @@ public class MovieController {
 			return new ResponseEntity<Error>(error, HttpStatus.BAD_REQUEST);
 		}
 
-		producer.sendNotificationMovie(createdMovie);
 
 		return new ResponseEntity<Movie>(createdMovie, HttpStatus.OK);
 	}
@@ -170,7 +165,6 @@ public class MovieController {
 		}
 
 		Movie updatedMovie = this.service.updateMovie(movie);
-		producer.sendNotificationMovie(updatedMovie);
 		return new ResponseEntity<Movie>(updatedMovie, HttpStatus.OK);
 
 	}
