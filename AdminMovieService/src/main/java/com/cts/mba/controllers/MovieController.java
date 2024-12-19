@@ -66,7 +66,7 @@ public class MovieController {
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		HttpEntity<UserDTO> entity = new HttpEntity<UserDTO>(user, headers);
 		try {
-			String body = this.template.exchange("https://admin-movie-service-g4h0dgdvb9h2gjdf.centralus-01.azurewebsites.net/api/v1/auth/" + roleId + "/register/",
+			String body = this.template.exchange("https://user-auth-service-a3fpedgah7amefh4.centralus-01.azurewebsites.net/api/v1/auth/" + roleId + "/register/",
 					HttpMethod.POST, entity, String.class).getBody();
 
 			this.message = gson.fromJson(body, Message.class);
@@ -99,7 +99,7 @@ public class MovieController {
 
 		try {
 			String body = this.template
-					.exchange("https://admin-movie-service-g4h0dgdvb9h2gjdf.centralus-01.azurewebsites.net/api/v1/auth/login", HttpMethod.POST, entity, String.class)
+					.exchange("https://user-auth-service-a3fpedgah7amefh4.centralus-01.azurewebsites.net/api/v1/auth/login", HttpMethod.POST, entity, String.class)
 					.getBody();
 
 			this.token = gson.fromJson(body, JwtTokenDAO.class);
